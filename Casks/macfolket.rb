@@ -7,6 +7,16 @@ cask "macfolket" do
   desc "Swedish-English dictionary for macOS Dictionary.app"
   homepage "https://github.com/hashier/MacFolket"
 
+  preflight do
+    user_dict = File.expand_path("~/Library/Dictionaries/Svensk-English.dictionary")
+    if File.exist?(user_dict)
+      opoo "An older MacFolket install was found at #{user_dict}. " \
+           "This Homebrew version installs to /Library/Dictionaries/. " \
+           "To avoid duplicates, remove the old copy with:\n" \
+           "  rm -rf \"#{user_dict}\""
+    end
+  end
+
   pkg "MacFolket-#{version}.pkg"
 
   uninstall delete: "/Library/Dictionaries/Svensk-English.dictionary"
