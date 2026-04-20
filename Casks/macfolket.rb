@@ -1,6 +1,6 @@
 cask "macfolket" do
-  version "1.3"
-  sha256 "PLACEHOLDER_UPDATE_ON_RELEASE"
+  version "2026.1"
+  sha256 "21826c95573c07d5c9aef73a94d7f1c99f8f88c6b7e410d2b97fe4c6faa1ad43"
 
   url "https://github.com/hashier/MacFolket/releases/download/v#{version}/MacFolket-#{version}.zip"
   name "MacFolket"
