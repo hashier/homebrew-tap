@@ -9,15 +9,24 @@ cask "macfolket" do
 
   preflight do
     system_dict = "/Library/Dictionaries/Svensk-English.dictionary"
-    if File.exist?(system_dict)
-      opoo "An older MacFolket install was found at #{system_dict}. " \
-           "This Homebrew version installs to ~/Library/Dictionaries/. " \
-           "To avoid duplicates, remove the old copy with:\n" \
-           "  sudo rm -rf \"#{system_dict}\""
+    user_dict   = File.expand_path("~/Library/Dictionaries/Svensk-English.dictionary")
+    populated   = ->(bundle) { File.exist?(File.join(bundle, "Contents", "Info.plist")) }
+
+    if populated.call(system_dict)
+      odie "An older MacFolket install was found at #{system_dict}. " \
+           "This Homebrew version installs to ~/Library/Dictionaries/, which would " \
+           "leave two copies registered with Dictionary.app. Remove the old copy first, then retry:\n" \
+           "  sudo rm -rf \"#{system_dict}\"\n" \
+           "  brew reinstall --cask macfolket"
+    end
+
+    if populated.call(user_dict)
+      odie "A non-Homebrew MacFolket install was found at #{user_dict}. " \
+           "Homebrew will not take ownership of existing files. Remove it first, then retry:\n" \
+           "  rm -rf \"#{user_dict}\"\n" \
+           "  brew reinstall --cask macfolket"
     end
   end
 
   artifact "Svensk-English.dictionary", target: "~/Library/Dictionaries/Svensk-English.dictionary"
-
-  uninstall delete: "~/Library/Dictionaries/Svensk-English.dictionary"
 end
